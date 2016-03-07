@@ -49,11 +49,40 @@ int main(int argc, char **argv)
   //test.process();
 
   cv::Mat cv_img;
-  test.retrieveHeightMap(cv_img);
+  cv::Mat free_map;
+  test.retrieveHeightMap(cv_img, free_map);
 
 
   cv::namedWindow("grid",cv::WINDOW_NORMAL);
   cv::imshow("grid", cv_img);
+
+  cv::namedWindow("free",cv::WINDOW_NORMAL);
+  cv::imshow("free", free_map);
+
+  cv::Mat inpaint_lib;
+  cv_image_convert::getInpaintedImage(cv_img, inpaint_lib, -0.5, 0.5);
+
+  cv::namedWindow("inpaint_lib",cv::WINDOW_NORMAL);
+  cv::imshow("inpaint_lib", inpaint_lib);
+
+  cv::Mat inpaint_free;
+  cv_image_convert::getInpaintedImage(free_map, inpaint_free, -0.5, 0.5);
+
+  cv::namedWindow("inpaint_free",cv::WINDOW_NORMAL);
+  cv::imshow("inpaint_free", inpaint_free);
+
+  cv::Mat diff = inpaint_lib - inpaint_free;
+
+  cv::namedWindow("diff",cv::WINDOW_NORMAL);
+  cv::imshow("diff", diff);
+
+  cv::Mat grad_mag_img;
+  cv_image_convert::getGradientMagnitudeImage(inpaint_lib,grad_mag_img);
+
+  cv::namedWindow("grad_mag_img",cv::WINDOW_NORMAL);
+  cv::imshow("grad_mag_img", grad_mag_img);
+
+
   //cv::waitKey(0);
 
   //cv::Mat upper_thresh;
@@ -69,7 +98,7 @@ int main(int argc, char **argv)
   //inpaint_img = lower_thresh;
 
   cv::Mat tmp;
-  cv_image_convert::getUC8ImageFromFC1(cv_img, tmp, 0, 0.5);
+  cv_image_convert::getUC8ImageFromFC1(cv_img, tmp, 0, 1.5);
 
   //@TODO: Do not copy here for setting size
   cv::Mat mask;

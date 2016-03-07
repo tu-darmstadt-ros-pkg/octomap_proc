@@ -102,8 +102,8 @@ public:
 
   void process()
   {
-    cv::Mat heightmap;
-    this->retrieveHeightMap(heightmap);
+    //cv::Mat heightmap;
+    //this->retrieveHeightMap(heightmap);
   }
 
   inline unsigned mapIdx(int i, int j) const {
@@ -148,7 +148,7 @@ public:
 
 
 
-  bool retrieveHeightMap(cv::Mat& heightmap){
+  bool retrieveHeightMap(cv::Mat& heightmap, cv::Mat& free_map){
 
 
 
@@ -202,6 +202,9 @@ public:
     map_width = width;
 
     cv::Mat cv_img(height, width, CV_32FC1, cv::Scalar(-std::numeric_limits<float>::max()));
+    cv::Mat free_img(height, width, CV_32FC1, cv::Scalar(std::numeric_limits<float>::max()));
+    //cv::Mat free_img(height, width, CV_32FC1, cv::Scalar(1.49));
+        //
     //cv::Mat cv_img(height, width, CV_32FC1, cv::Scalar(-1.0));
 
     //std::cout << "grid w: " << width << " h " << height << "\n";
@@ -219,7 +222,9 @@ public:
 
 
 
-      if (m_octree->isNodeOccupied(*it)){
+      //if (m_octree->isNodeOccupied(*it)){
+
+    bool occupied = m_octree->isNodeOccupied(*it);
         double z = it.getZ();
 
         if (z < 1.5){
@@ -230,8 +235,14 @@ public:
             //int idx = mapIdx(it.getKey());
             //std::cout << idx << " z: " << z <<"\n";
 
-            if (z > cv_img.at<float>(idx)){
-              cv_img.at<float>(idx) = z;
+            if (occupied){
+              if (z > cv_img.at<float>(idx)){
+                cv_img.at<float>(idx) = z;
+              }
+            }else{
+              if (z < free_img.at<float>(idx)){
+                free_img.at<float>(idx) = z;
+              }
             }
 
             //std::cout << cv_img.at<float>(idx) <<"\n";
@@ -250,8 +261,14 @@ public:
               for(int dy=0; dy < intSize; dy++){
                 unsigned idx = mapIdx(i, (minKey[1]+dy - m_paddedMinKey[1])/m_multires2DScale);
 
-                if (z > cv_img.at<float>(idx)){
-                  cv_img.at<float>(idx) = z;
+                if (occupied){
+                  if (z > cv_img.at<float>(idx)){
+                    cv_img.at<float>(idx) = z;
+                  }
+                }else{
+                  if (z < free_img.at<float>(idx)){
+                    free_img.at<float>(idx) = z;
+                  }
                 }
                 //if (occupied){
                 //m_gridmap.data[idx] = 100;
@@ -300,13 +317,15 @@ public:
         }
       }
       */
-    }
+    //}
   }
 
   double total_elapsed = (ros::WallTime::now() - startTime).toSec();
   std::cout << total_elapsed;
 
   heightmap = cv_img;
+
+  free_map = free_img;
 
   return true;
 
