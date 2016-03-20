@@ -23,7 +23,7 @@ add_definitions(-DOCTOMAP_NODEBUGOUT)
 
 catkin_package(
 #  INCLUDE_DIRS include
-   LIBRARIES ${PROJECT_NAME}
+#   LIBRARIES ${PROJECT_NAME}
    CATKIN_DEPENDS cv_bridge geometry_msgs octomap_msgs octomap_ros roscpp sensor_msgs std_msgs tf visualization_msgs cv_image_proc
 #  DEPENDS system_lib
 )

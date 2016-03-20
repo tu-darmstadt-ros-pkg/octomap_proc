@@ -95,6 +95,11 @@ public:
     m_multires2DScale = 1 << (m_treeDepth - m_maxTreeDepth);
   }
 
+  void setOctree(octomap::OcTree* octree_in)
+  {
+    m_octree = octree_in;
+  }
+
   void printInfo()
   {
     std::cout << "mem_usage: " << m_octree->memoryUsage() << " size: " << m_octree->size() << " depth: " << m_octree->getTreeDepth() << "\n";
