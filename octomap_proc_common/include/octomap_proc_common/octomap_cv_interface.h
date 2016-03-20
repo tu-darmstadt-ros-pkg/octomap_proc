@@ -67,9 +67,13 @@ public:
 
     std::string suffix = filename.substr(filename.length()-3, 3);
     if (suffix== ".bt"){
-      if (!m_octree->readBinary(filename)){
+      octomap::OcTree* tmp;
+      if (!tmp->readBinary(filename)){
         return false;
       }
+
+      m_octree = tmp;
+
     } else if (suffix == ".ot"){
       octomap::AbstractOcTree* tree = octomap::AbstractOcTree::read(filename);
       if (!tree){
@@ -95,7 +99,7 @@ public:
     m_multires2DScale = 1 << (m_treeDepth - m_maxTreeDepth);
   }
 
-  void setOctree(octomap::OcTree* octree_in)
+  void setOctree(const octomap::OcTree* octree_in)
   {
     m_octree = octree_in;
   }
@@ -353,7 +357,7 @@ public:
 
 
 protected:
-  octomap::OcTree* m_octree;
+  const octomap::OcTree* m_octree;
 
   int m_maxTreeDepth;
   int m_treeDepth;
