@@ -102,6 +102,11 @@ public:
   void setOctree(const octomap::OcTree* octree_in)
   {
     m_octree = octree_in;
+
+    m_treeDepth = m_octree->getTreeDepth();
+    m_maxTreeDepth = m_treeDepth;
+
+    m_multires2DScale = 1 << (m_treeDepth - m_maxTreeDepth);
   }
 
   void printInfo()
@@ -192,8 +197,8 @@ public:
     m_octree->getMetricMin(minX, minY, minZ);
     m_octree->getMetricMax(maxX, maxY, maxZ);
 
-    std::cout << "min: " << minX << "\n";
-    std::cout << "max: " << maxX << "\n";
+    //std::cout << "min: " << minX << "\n";
+    //std::cout << "max: " << maxX << "\n";
 
 
     octomap::point3d minPt(minX, minY, minZ);
@@ -330,7 +335,7 @@ public:
   }
 
   double total_elapsed = (ros::WallTime::now() - startTime).toSec();
-  std::cout << total_elapsed;
+  std::cout << "elapsed time: " << total_elapsed << "\n";
 
   heightmap = cv_img;
 
