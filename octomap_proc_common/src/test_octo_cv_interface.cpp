@@ -39,9 +39,8 @@ int main(int argc, char **argv)
   //vigir_point_cloud_proc::DepthImageToMeshRos<pcl::PointXYZ> conv;
   octomap_cv_interface::OctomapCvInterface test;
 
-  //test.fromFile("/home/kohlbrecher/logs/argos/obstacles/elevated_1.ot");
-  //test.fromFile("/home/kohlbrecher/logs/argos/obstacles/taurob_near_stairs.ot");
-  test.fromFile("/home/kohlbrecher/logs/argos/obstacles/taurob_drive_near_stairs.ot");
+  // @TODO: Use non-hardcoded path
+  test.fromFile("/home/kohlbrecher/logs/obstacles_jasmine.ot");
 
 
   test.printInfo();
